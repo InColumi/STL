@@ -21,8 +21,8 @@ struct Stack
 	/// </summary>
 	Stack()
 	{
-		Data = NULL; // 
-		Count = 0;
+		Data = NULL; // присваивем указателю значение NULL 
+		Count = 0; // обозначаем, что в структуре 0 элементов
 	}
 
 	/// <summary>
@@ -65,9 +65,9 @@ struct Stack
 		{
 			try // попытка удаление первого элемента Stack
 			{
-				T* oldData; // присваиваем oldData ссылку Data
-				oldData = Data; // выделяем память на 1 элемент меньше
-				Data = new T[Count - 1];
+				T* oldData; /// создаём временны указатель
+				oldData = Data;  // присваиваем oldData ссылку Data
+				Data = new T[Count - 1];// выделяем память на 1 элемент меньше
 				Count--; // Уменьшаем кол-во элементов в Stack
 				for(size_t i = 0; i < Count; i++)
 				{
@@ -86,13 +86,12 @@ struct Stack
 		else // Иначе вывести сообщение, что Stack пуст и закрыть программу
 		{
 			std::cout << "Stack is empty\n";
-			exit(0);
+			exit(0);// выход из программы
 		}
-		return T();
 	}
 
 	/// <summary>
-	/// Возвращает bool пуст ли стек
+	/// Возвращает bool пуст ли Stack
 	/// </summary>
 	/// <returns></returns>
 	bool is_empty()
@@ -111,92 +110,118 @@ struct Stack
 	}
 };
 
+/// <summary>
+/// Структура Queue построенна по принципу First in First out
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template<typename T>
 struct Queue
 {
+	/// <summary>
+	/// Укзатель на первый эдемент
+	/// </summary>
 	T* Data;
+	/// <summary>
+	/// Кол-во элементов в структуре
+	/// </summary>
 	size_t Count;
 
+	/// <summary>
+	/// Конструктор по умолчанию
+	/// </summary>
 	Queue()
 	{
-		Data = nullptr;
-		Count = 0;
+		Data = NULL; // присваивем указателю значение NULL 
+		Count = 0; // обозначаем, что в структуре 0 элементов
 	}
 
+	/// <summary>
+	/// Добавление элемента в Queue
+	/// </summary>
+	/// <param name="item">Новый элемент</param>
 	void push(T item)
 	{
-		T* oldData;
-		oldData = Data;
+		T* oldData; /// создаём временны указатель
 
-		try
+		try // попытка добавить элемент в Queue
 		{
-			Data = new T[Count + 1];
+			oldData = Data; // присваиваем oldData ссылку Data
+			Data = new T[Count + 1];// выделяем память на 1 элемент больше
 
 			for(size_t i = 0; i < Count; i++)
 			{
-				Data[i] = oldData[i];
+				Data[i] = oldData[i];  // Присваиваем Data старые элементы
 			}
 
-			Data[Count] = item;
-			Count++;
-			if(Count > 1)
-				delete[] oldData;
+			Data[Count] = item; // последним элементов записываем новый
+			Count++; // Увеличиваем кол-во элементов в Queue
+			if(Count > 1) // Если элеменов больше одного, тогда удаляем созданную ссылку oldData
+				delete[] oldData;  // очистка памяти из под указателя
 		}
-		catch(std::bad_alloc e)
+		catch(std::bad_alloc e)  // В случает проблем с добавлением, будет вызвано исключение
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << e.what() << std::endl; // вывод текста ошибки
 		}
 	}
 
+	/// <summary>
+	/// Возвращает первый элемент Queue и удаляет из структуры
+	/// </summary>
+	/// <returns>первый элемент Queue</returns>
 	T pop()
 	{
-		if(Count > 0)
+		if(Count > 0)  // если элементов больше, чем 1
 		{
 			T item;
-			item = Data[0];
-			try
+			item = Data[0]; // сохраняем первый элемент Queue 
+			try // попытка удаление первого элемента Queue
 			{
-				T* p2;
-				p2 = new T[Count - 1];
-				Count--;
+				T* p2; // создаём указатель
+				p2 = new T[Count - 1];// выделяем память на 1 элемент меньше
+				Count--; // Уменьшаем кол-во элементов в Stack
 				for(size_t i = 0; i < Count; i++)
 				{
-					p2[i] = Data[i + 1];
+					p2[i] = Data[i + 1]; // Присваиваем p2 старые элементы
 				}
 
 
-				if(Count > 0)
+				if(Count > 0) // Если элеменов больше 0, тогда удаляем созданную ссылку Data
 				{
-					delete[] Data;
+					delete[] Data; // очистка памяти из под массива
 				}
 
-				Data = p2;
+				Data = p2; // присваиваем ссылку 
 
-				return item;
+				return item; // позвращаем элемент
 			}
-			catch(std::bad_alloc e)
+			catch(std::bad_alloc e) // В случает проблем с добавлением, будет вызвано исключение
 			{
-				std::cout << e.what() << std::endl;
-				return 0;
+				std::cout << e.what() << std::endl; // вывод текста ошибки
 			}
 		}
-		else
+		else // Иначе вывести сообщение, что Stack пуст и закрыть программу
 		{
 			std::cout << "Queue is empty\n";
-			exit(0);
+			exit(0); // выход из программы
 		}
 	}
 
+	/// <summary>
+	/// Возвращает bool пуста ли Queue
+	/// </summary>
+	/// <returns></returns>
 	bool is_empty()
 	{
-		return Count == 0;
+		return Count == 0; // если кол-во элементов в структуре = 0, тогда вернет true иначе false
 	}
 
+	// Деструктор (очищает память из под объекта при удалении)
 	~Queue()
 	{
 		if(Count > 0)
 		{
-			delete[] Data;
+			delete[] Data; // очистка памяти из под указателя
+			Count = 0; // Обнуляем счетчик элементов
 		}
 	}
 };
