@@ -1,68 +1,89 @@
 #include <iostream>
 
+/// <summary>
+/// Стуктура Stack построена по принципу First in Last out
+/// </summary>
+/// <typeparam name="T"></typeparam>
 template<typename T>
 struct Stack
 {
-
+	/// <summary>
+	/// Укзатель на первый эдемент
+	/// </summary>
 	T* Data;
+	/// <summary>
+	/// Кол-во элементов в структуре
+	/// </summary>
 	size_t Count;
 
+	/// <summary>
+	/// Конструктор по умолчанию
+	/// </summary>
 	Stack()
 	{
-		Data = nullptr;
+		Data = NULL; // 
 		Count = 0;
 	}
 
+	/// <summary>
+	/// Добавление элемента в Stack
+	/// </summary>
+	/// <param name="item">Новый элемент</param>
 	void push(T item)
 	{
-		T* oldData;
-		try
+		T* oldData; /// создаём временны указатель
+
+		try // попытка добавить элемент в Stack
 		{
-			oldData = Data;
-			Data = new T[Count + 1];
-			Count++;
+			oldData = Data; // присваиваем oldData ссылку Data
+			Data = new T[Count + 1]; // выделяем память на 1 элемент больше
+			Count++; // Увеличиваем кол-во элементов в Stack
 			for(size_t i = 0; i < Count - 1; i++)
 			{
-				Data[i] = oldData[i];
+				Data[i] = oldData[i]; // Присваиваем Data старые элементы
 			}
 
-			Data[Count - 1] = item;
-			if(Count > 1)
+			Data[Count - 1] = item; // последним элементов записываем новый
+			if(Count > 1) // Если элеменов больше одного, тогда удаляем созданную ссылку oldData
 			{
-				delete[] oldData;
+				delete[] oldData; // очистка памяти из под указателя
 			}
 		}
-		catch(std::bad_alloc e)
+		catch(std::bad_alloc e) // В случает проблем с добавлением, будет вызвано исключение
 		{
-			std::cout << e.what() << std::endl;
+			std::cout << e.what() << std::endl; // вывод текста ошибки
 		}
 	}
 
+	/// <summary>
+	/// Возвращает первый элемент Stack и удаляет из структуры
+	/// </summary>
+	/// <returns>первый элемент Stack</returns>
 	T pop()
 	{
-		if(Count > 0)
+		if(Count > 0) // если элементов больше, чем 1
 		{
-			try
+			try // попытка удаление первого элемента Stack
 			{
-				T* oldData;
-				oldData = Data;
+				T* oldData; // присваиваем oldData ссылку Data
+				oldData = Data; // выделяем память на 1 элемент меньше
 				Data = new T[Count - 1];
-				Count--;
+				Count--; // Уменьшаем кол-во элементов в Stack
 				for(size_t i = 0; i < Count; i++)
 				{
-					Data[i] = oldData[i];
+					Data[i] = oldData[i]; // Присваиваем Data старые элементы
 				}
-				T data = oldData[Count];
-				delete[] oldData;
-				return data;
+				T data = oldData[Count]; // сохраняем первый элемент  Stack 
+				delete[] oldData; // очистка памяти из под указателя
+				return data; // очистка памяти из под указателя
 
 			}
-			catch(std::bad_alloc e)
+			catch(std::bad_alloc e) // В случает проблем с добавлением, будет вызвано исключение
 			{
-				std::cout << e.what() << std::endl;
+				std::cout << e.what() << std::endl; // вывод текста ошибки
 			}
 		}
-		else
+		else // Иначе вывести сообщение, что Stack пуст и закрыть программу
 		{
 			std::cout << "Stack is empty\n";
 			exit(0);
@@ -70,16 +91,22 @@ struct Stack
 		return T();
 	}
 
+	/// <summary>
+	/// Возвращает bool пуст ли стек
+	/// </summary>
+	/// <returns></returns>
 	bool is_empty()
 	{
-		return Count == 0;
+		return Count == 0; // если кол-во элементов в структуре = 0, тогда вернет true иначе false
 	}
 
+	// Деструктор (очищает память из под объекта при удалении)
 	~Stack()
 	{
-		if(Count > 0)
+		if(Count > 0) // Если элементов больше, чем 1
 		{
-			delete[] Data;
+			delete[] Data; // очистка памяти из под указателя
+			Count = 0; // Обнуляем счетчик элементов
 		}
 	}
 };
